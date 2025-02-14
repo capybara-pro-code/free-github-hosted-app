@@ -21,6 +21,8 @@ REPOSITORY_PATH="https://x-access-token:$GITHUB_TOKEN@$GITHUB_SERVER_URL/$GITHUB
 workspace=$(mktemp -d)
 cd "$workspace" || exit 1
 
+npm install -g localtunnel
+
 init_git() {
   git init
   git config --global --add safe.directory "$workspace"
@@ -48,8 +50,8 @@ commit_public_url() {
 
 start_tunnel() {
   echo "Starting tunnel in background on port [ ${LOCAL_PORT} ]"
-  ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=60 -T -R "80:$LOCAL_HOST:$LOCAL_PORT" nokey@localhost.run 2>&1 |
-    tee >(grep -oE --line-buffered '(https:\/\/[[:alnum:]]+\.lhr\.life)' | while IFS= read -r line; do commit_public_url "$line"; done)
+  lt --local-host app --port 8080 |
+    tee >(grep -oE --line-buffered '(https:\/\/[[:alnum:]]+\.loca\.lt)' | while IFS= read -r line; do commit_public_url "$line"; done)
 }
 
 init_git

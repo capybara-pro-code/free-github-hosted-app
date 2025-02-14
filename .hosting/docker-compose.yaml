@@ -5,7 +5,7 @@ services:
     volumes:
       - ./logs/:/app/logs/
   tunnel:
-    image: bitnami/git
+    image: timbru31/node-alpine-git
     env_file: tunnel.env
     depends_on: [ app ]
     volumes:
